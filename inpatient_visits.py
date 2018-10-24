@@ -106,7 +106,36 @@ plt.show()
 
 print(sparcs_df["CCS Procedure Description"].value_counts())
 
-sparcs_df["CCS Procedure Description"] = np.where(sparcs_df["CCS Procedure Description"] == "NO PROC" , 0, 1)
+sparcs_df["CCS Procedure Description"] = np.where(sparcs_df["CCS Procedure Description"] == "NO PROC" , 1, 
+                             np.where(sparcs_df["CCS Procedure Description"] == "OTHER THERAPEUTIC PRCS", 2,
+                             np.where(sparcs_df["CCS Procedure Description"] == "OT PRCS TO ASSIST DELIV", 3,
+                             np.where(sparcs_df["CCS Procedure Description"] == "PROPHYLACTIC VAC/INOCUL", 4,
+                             np.where(sparcs_df["CCS Procedure Description"] == "CESAREAN SECTION", 5,
+                             np.where(sparcs_df["CCS Procedure Description"] == "RESP INTUB/MECH VENTIL", 6,
+                             np.where(sparcs_df["CCS Procedure Description"] == "ALCO/DRUG REHAB/DETOX", 7, 
+                             np.where(sparcs_df["CCS Procedure Description"] == "PSYCHO/PSYCHI EVAL/THER", 8,
+                             np.where(sparcs_df["CCS Procedure Description"] == "CIRCUMCISION", 9,
+                             np.where(sparcs_df["CCS Procedure Description"] == "OPHTHALM-/OT-OLOGIC DX", 10,
+                             np.where(sparcs_df["CCS Procedure Description"] == "BLOOD TRANSFUSION", 11,
+                             np.where(sparcs_df["CCS Procedure Description"] == "ARTHROPLASTY KNEE", 12, 
+                             np.where(sparcs_df["CCS Procedure Description"] == "REPAIR CUR OBS LACERATN", 13,
+                             np.where(sparcs_df["CCS Procedure Description"] == "HIP REPLACEMENT,TOT/PRT", 14,
+                             np.where(sparcs_df["CCS Procedure Description"] == "UP GASTRO ENDOSC/BIOPSY", 15,
+                             np.where(sparcs_df["CCS Procedure Description"] == "DX CARDIAC CATHETERIZTN", 16,
+                             np.where(sparcs_df["CCS Procedure Description"] == "DX ULTRASOUND HEART", 17,
+                             np.where(sparcs_df["CCS Procedure Description"] == "OTHER RESP THERAPY", 18,
+                             np.where(sparcs_df["CCS Procedure Description"] == "SPINAL FUSION", 19,
+                             np.where(sparcs_df["CCS Procedure Description"] == "HEMODIALYSIS", 20,
+                             np.where(sparcs_df["CCS Procedure Description"] == "PERC TRANSLUM COR ANGIO", 21,
+                             np.where(sparcs_df["CCS Procedure Description"] == "OT VASC CATH; NOT HEARTT", 22,
+                             np.where(sparcs_df["CCS Procedure Description"] == "COMP AXIAL TOMOGR (CT)", 23,
+                             np.where(sparcs_df["CCS Procedure Description"] == "PHYS THER EXER, MANIPUL", 24,
+                             np.where(sparcs_df["CCS Procedure Description"] == "CHOLECYSTECTOMY/EXPLOR", 25,
+                             np.where(sparcs_df["CCS Procedure Description"] == "OT OR PRCS VES NOT HEAD", 26,
+                             np.where(sparcs_df["CCS Procedure Description"] == "OT DX PRC (INTERVW,EVAL", 27,
+                             np.where(sparcs_df["CCS Procedure Description"] == "TRTMNT,FRAC HIP/FEMUR", 28,
+                             np.where(sparcs_df["CCS Procedure Description"] == "APPENDECTOM", 29,
+                             np.where(sparcs_df["CCS Procedure Description"] == "GASTRECTOMY; PART/TOTAL", 30,31))))))))))))))))))))))))))))))
 
 print(sparcs_df["CCS Procedure Description"].value_counts())
 
@@ -243,7 +272,7 @@ for name, model in models:
 	msg = "%s: %f (%f)" % (name, cv_results.mean(), cv_results.std())
 	print(msg)
 
-model =  GradientBoostingClassifier()
+model =  DecisionTreeClassifier()
 model.fit(X_train, Y_train)
 
 feat_imp = pd.Series(model.feature_importances_, X_train.columns).sort_values(ascending=False)
@@ -254,10 +283,8 @@ best_features= feat_imp[feat_imp > 0]
 best_features_columns= list(best_features.index)
 
 predictions = model.predict(X_test)
-predictions_probs = model.predict_proba(X_test)
-preds = np.where(predictions_probs[:,1] >= 0.5 , 1, 0)
-print(accuracy_score(Y_test, preds))
-print(confusion_matrix(Y_test, preds))
-print(classification_report(Y_test, preds))
-score_test = metrics.f1_score(Y_test, preds,
+print(accuracy_score(Y_test, predictions))
+print(confusion_matrix(Y_test, predictions))
+print(classification_report(Y_test, predictions))
+score_test = metrics.f1_score(Y_test, predictions,
                               pos_label=list(set(Y_test)), average = None)
