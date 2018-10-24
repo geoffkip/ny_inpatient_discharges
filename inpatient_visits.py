@@ -106,6 +106,11 @@ plt.show()
 
 print(sparcs_df["CCS Procedure Description"].value_counts())
 
+sparcs_df["CCS Procedure Description"] = np.where(sparcs_df["CCS Procedure Description"] == "NO PROC" , 0, 1)
+
+print(sparcs_df["CCS Procedure Description"].value_counts())
+
+
 cat_columns = ["APR Medical Surgical Description", "APR Risk of Mortality", "APR Severity of Illness Description",
               "Abortion Edit Indicator", "Age Group", "Emergency Department Indicator", "Ethnicity", "Gender",
               "Health Service Area", "Race","Type of Admission"]
@@ -238,7 +243,7 @@ for name, model in models:
 	msg = "%s: %f (%f)" % (name, cv_results.mean(), cv_results.std())
 	print(msg)
 
-model =  LogisticRegression()
+model =  GradientBoostingClassifier()
 model.fit(X_train, Y_train)
 
 feat_imp = pd.Series(model.feature_importances_, X_train.columns).sort_values(ascending=False)
